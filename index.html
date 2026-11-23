@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basecamp Desk</title>
+<meta name="description" content="AI drafting kits for small outdoor, tour and guide businesses. Drafts from your own facts. You read and send everything yourself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --surface:#fffdf8; --ink:#1f2a24; --muted:#5b665f; --line:#ddd6c8;
+  --accent:#2f6b4f; --accent-ink:#ffffff; --accent-soft:#e3eee7; --warn:#9a4b25; --warn-soft:#f6e6dc;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a17; --surface:#1c2420; --ink:#e9ede9; --muted:#a3aea7; --line:#2f3a34;
+    --accent:#7cc4a0; --accent-ink:#0f1a14; --accent-soft:#22332a; --warn:#e8a07c; --warn-soft:#3a2a22;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141a17; --surface:#1c2420; --ink:#e9ede9; --muted:#a3aea7; --line:#2f3a34;
+  --accent:#7cc4a0; --accent-ink:#0f1a14; --accent-soft:#22332a; --warn:#e8a07c; --warn-soft:#3a2a22;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2rem,5.5vw,3.3rem)}
+h2{font-size:clamp(1.5rem,3.5vw,2.1rem)}
+h3{font-size:1.25rem}
+p{margin:0 0 1em}
+a{color:var(--accent)}
+header.top{padding:20px 0;border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:1.2rem;color:var(--ink);text-decoration:none}
+nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:.95rem}
+nav a:hover{color:var(--ink)}
+.hero{padding-top:64px;padding-bottom:48px}
+.hero p.lede{font-size:1.2rem;color:var(--muted);max-width:640px}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{color:var(--accent);background:transparent}
+.btn.disabled{border-color:var(--line);color:var(--muted);cursor:default}
+section{padding:48px 0;border-top:1px solid var(--line)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+.step{font-weight:600;color:var(--accent);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.price{font-family:Fraunces,Georgia,serif;font-size:2rem;font-weight:700;margin:4px 0 12px}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+ul.clean{padding-left:1.1em;margin:0 0 1em}
+ul.clean li{margin-bottom:.35em}
+.muted{color:var(--muted)}
+blockquote{margin:0;padding:16px 18px;border-radius:10px;font-size:.95rem}
+.bad{background:var(--warn-soft);border-left:4px solid var(--warn)}
+.good{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.label{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.review{font-style:italic;color:var(--muted);max-width:720px}
+footer{padding:32px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+@media (max-width:760px){
+  .grid3,.grid2{grid-template-columns:1fr}
+  nav{display:none}
+  .hero{padding-top:40px;padding-bottom:32px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#">Basecamp Desk</a>
+  <nav><a href="#free">Free kit</a><a href="#kit">Guest Inbox Kit</a><a href="#extension">Extension</a><a href="#honest">What's tested</a></nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <h1>The guest emails and review replies you write every week, drafted from your own facts.</h1>
+  <p class="lede">Prompt kits for outfitters, guide services, tour operators and outdoor programs with 1 to 25 staff. Fill in one fact sheet, paste an email or a review, and get a draft that uses only what you wrote down. You read and send everything yourself.</p>
+  <div class="btns">
+    <a class="btn primary" href="downloads/review-reply-desk.md" download>Get the free Review Reply Desk</a>
+    <a class="btn ghost" href="#kit">See the Guest Inbox Kit</a>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <h2>How it works</h2>
+  <div class="grid3">
+    <div class="card"><div class="step">Once, 20 minutes</div><h3>Fill in one fact sheet</h3><p>Your trips, prices, policies and how you sound. Write "none" for no, leave a line blank if undecided. Every kit reads from this one sheet.</p></div>
+    <div class="card"><div class="step">Each time</div><h3>Paste and get a draft</h3><p>Use ChatGPT, Claude or Gemini. A free account works. Paste the prompt, your fact sheet and the email or review.</p></div>
+    <div class="card"><div class="step">You decide</div><h3>Read, fix, send</h3><p>Anything your sheet does not answer comes back as a short list for you to confirm, not a guess. Nothing is sent for you.</p></div>
+  </div>
+</div></section>
+
+<section id="free"><div class="wrap">
+  <span class="tag">Free</span>
+  <h2>Review Reply Desk</h2>
+  <p style="max-width:720px">Reply to every review in two minutes, without saying something you will regret. It sorts each review first. Happy reviews get a short, specific thank-you. Complaints get a calm reply that admits nothing you have not checked. Anything about an injury, safety gear, a lawyer or a refund demand is held, with a checklist of what to look into and a private message you can send.</p>
+  <h3 style="margin-top:28px">The same 2-star review, two ways</h3>
+  <p class="review">"Our guide Sam was great, but we waited 40 minutes at the trailhead because the meeting spot on the confirmation was wrong. Then my wife slipped on ice and nobody had a first aid kit. We want a refund."</p>
+  <div class="grid2">
+    <div><div class="label" style="color:var(--warn)">A popular free prompt</div>
+      <blockquote class="bad">Greg, thank you for telling us, and I'm sorry. A wrong meeting spot on your confirmation and a 40-minute wait is our mistake, and your wife slipping with no first aid kit on hand is not acceptable on any snowshoe tour we run. I'm glad Sam took good care of you otherwise. We are correcting the confirmation details and checking every guide's kit. Please email us so we can sort out your refund and hear how your wife is doing.</blockquote>
+      <p class="muted" style="margin-top:10px;font-size:.92rem">Admits fault for an injury in public before anyone checked what happened, and promises a refund.</p></div>
+    <div><div class="label" style="color:var(--accent)">Review Reply Desk</div>
+      <blockquote class="good">Hi Greg,<br><br>Thank you for writing to us. We take what you describe seriously, and we want to hear from you directly. Please email us privately at dana@tamarackridge.example so we can talk with you, and we will reply as soon as we can.<br><br>The Tamarack Ridge crew</blockquote>
+      <p class="muted" style="margin-top:10px;font-size:.92rem">Routed to HOLD. The owner also gets a six-point checklist and a private message that makes no refund promise.</p></div>
+  </div>
+  <p class="muted" style="font-size:.88rem;margin-top:14px">One run of each on Claude, with a fictional business.</p>
+  <div class="btns">
+    <a class="btn primary" href="downloads/review-reply-desk.md" download>Download the Review Reply Desk</a>
+    <a class="btn ghost" href="downloads/business-fact-sheet.md" download>Download the fact sheet</a>
+  </div>
+</div></section>
+
+<section id="kit"><div class="wrap">
+  <div class="grid2" style="align-items:start">
+    <div>
+      <span class="tag warn">Coming soon</span>
+      <h2>Guest Inbox Kit</h2>
+      <div class="price">$49</div>
+      <p>Three kits that would cost $87 apart, all reading from the same fact sheet.</p>
+      <div class="btns"><span class="btn disabled">Checkout opening soon</span></div>
+    </div>
+    <div class="card">
+      <ul class="clean">
+        <li><strong>Guest Email Kit.</strong> Inquiry replies, a three-email post-trip sequence, and an honest trip description.</li>
+        <li><strong>Private Trip Quote.</strong> Prices a private or group day with the math shown, and builds the day from your own route options.</li>
+        <li><strong>Voice Memo to Checklist.</strong> Turns a spoken walkthrough into a one-page checklist for seasonal staff.</li>
+        <li><strong>Business Fact Sheet.</strong> The fill-once sheet all of them read from.</li>
+      </ul>
+      <p class="muted" style="margin:0">Updates published in the 12 months after purchase are included. Not for anyone who wants email answered automatically: this kit drafts, you send.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="extension"><div class="wrap">
+  <span class="tag warn">In testing</span>
+  <h2>Guest Reply Desk for Gmail</h2>
+  <p style="max-width:720px">A Chrome extension in early testing. Open a guest email in Gmail, click <strong>Draft reply</strong>, and get a draft built from your own documents and your booking calendar. It flags any number it cannot trace back to your documents, holds anything about an injury or a complaint for you, and never says a trip is sold out unless the calendar says so. It never sends email.</p>
+  <p class="muted" style="max-width:720px">Not available yet. It has not been run on a real Gmail account or a live booking system.</p>
+</div></section>
+
+<section id="honest"><div class="wrap">
+  <h2>What has been tested</h2>
+  <div class="card" style="max-width:760px">
+    <ul class="clean">
+      <li>Every prompt has been run on Claude with a fictional business. The worked examples in each kit are those runs, word for word.</li>
+      <li>Not yet run on ChatGPT or Gemini.</li>
+      <li>All businesses and people in the examples are made up.</li>
+      <li>These are drafting aids, not legal advice. Remove guest surnames, phone numbers and booking numbers before you paste anything.</li>
+    </ul>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Basecamp Desk. Drafting kits for small outdoor businesses. You review and send every reply yourself.</div></footer>
+</body>
+</html>
