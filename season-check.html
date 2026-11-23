@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking Export PII Scrubber &amp; Season Check — Basecamp Desk</title>
+<meta name="description" content="Strip customer PII from FareHarbor, Flybook, Bokun, Checkfront, Rezdy, or Peek CSV exports locally in your browser, catch hidden duplicates, and reconcile exact year-over-year totals.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Basecamp Desk</a>
+  <nav class="main-nav">
+    <a href="index.html#free">Free kit</a>
+    <a href="workbench.html">Fact Sheet Workbench</a>
+    <a href="season-check.html" aria-current="page">Season Export Check</a>
+    <a href="index.html#kit">Guest Inbox Kit</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="wrap hero" style="padding-bottom:28px">
+  <span class="tag">Zero upload &middot; Deterministic math</span>
+  <h1>Booking Export PII Scrubber &amp; Season Check</h1>
+  <p class="lede">Drop in a CSV export from FareHarbor, Flybook, Bokun, Checkfront, Rezdy, or Peek. Everything runs locally in your browser: customer columns are stripped before anything leaves your computer, mixed date formats and hidden duplicates are caught, and every total is reconciled in code.</p>
+</div>
+
+<section style="padding-top:28px"><div class="wrap">
+  <div class="card no-print">
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload booking export CSV">
+      <p style="font-weight:600;margin-bottom:6px">Drop a booking export CSV here, or click to pick a file</p>
+      <p class="muted xs" style="margin:0">Stays 100% on your device. Recognizes standard Booking ID, Trip Date, Item, Guests, Status, Gross, Refunded, and Source headers.</p>
+      <input id="csvFile" type="file" accept=".csv,.tsv,.txt" hidden>
+    </div>
+
+    <div class="grid3" style="margin-top:16px">
+      <label class="field" style="margin:0"><span>Current season year</span><input id="optThisYear" type="number" placeholder="Auto-detect"></label>
+      <label class="field" style="margin:0"><span>Prior season year</span><input id="optLastYear" type="number" placeholder="Auto-detect"></label>
+      <label class="field" style="margin:0"><span>Today's date (for future trips)</span><input id="optToday" type="date"></label>
+    </div>
+
+    <div class="btns" style="margin-top:16px">
+      <button class="btn primary" id="runSample" type="button">Try with fictional sample export (with planted traps)</button>
+      <button class="btn subtle" id="rerunBtn" type="button" disabled>Re-run with updated years</button>
+    </div>
+    <div id="errBox" class="notice warn" hidden></div>
+  </div>
+
+  <div id="results" hidden style="margin-top:28px">
+    <div id="piiBanner" class="notice ok"></div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="btns no-print" style="margin-bottom:20px">
+      <button class="btn primary" id="dlCleanCsv" type="button">Download PII-free cleaned CSV</button>
+      <button class="btn ghost" id="copyNarrativePrompt" type="button">Copy AI Board Summary Prompt (works on free ChatGPT / Claude / Gemini)</button>
+      <button class="btn subtle" id="printReport" type="button">Print / Save PDF</button>
+    </div>
+    <div id="copyState" class="muted xs" style="margin-bottom:14px"></div>
+
+    <div id="futureNotice" class="notice warn" hidden></div>
+    <div id="questionsBox" class="card" style="margin-bottom:20px" hidden>
+      <h3>Questions for you to confirm</h3>
+      <ol id="questionsList" style="margin:0;padding-left:1.25em"></ol>
+    </div>
+
+    <div class="grid2" style="align-items:start">
+      <div class="card">
+        <h3>Net Revenue &amp; Bookings by Trip</h3>
+        <div class="table-wrap"><table class="data" id="tripTable"></table></div>
+      </div>
+      <div class="card">
+        <h3>Net Revenue &amp; Bookings by Source</h3>
+        <div class="table-wrap"><table class="data" id="sourceTable"></table></div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:20px;align-items:start">
+      <div class="card">
+        <h3>What Was Removed</h3>
+        <ul class="clean" id="removedList"></ul>
+        <p class="muted xs" id="formatMeta" style="margin:0"></p>
+      </div>
+      <div class="card">
+        <h3>Reconciliation Checks</h3>
+        <ul class="clean" id="checksList"></ul>
+      </div>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-row">
+  <span>Basecamp Desk. CSV processing happens locally in your browser; no booking file is ever uploaded.</span>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="workbench.html">Fact Sheet Workbench</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</div></footer>
+
+<script>
+const ROLE_PATTERNS = {
+  bookingId: ['booking id', 'booking #', 'booking number', 'booking ref', 'booking reference', 'reservation id', 'reservation #', 'order id', 'order number', 'confirmation code', 'confirmation #', 'invoice #', 'invoice id', 'reference', 'pk', 'id'],
+  tripDate: ['trip date', 'activity date', 'event date', 'start date', 'tour date', 'departure date', 'act. start time', 'activity start time', 'start date/time', 'start datetime', 'availability start', 'date'],
+  item: ['item', 'item name', 'trip', 'trip name', 'activity', 'activity name', 'act. name', 'tour', 'tour name', 'program', 'program name', 'product', 'product name', 'experience', 'event', 'event name', 'title'],
+  guests: ['guests', 'guest count', '# guests', 'pax', 'participants', 'number going', 'attendees', 'quantity', 'qty', 'tickets', 'people', 'party size', 'headcount', 'spots'],
+  status: ['status', 'booking status', 'reservation status', 'order status', 'state'],
+  gross: ['gross amount', 'gross', 'gross total', 'total', 'total amount', 'subtotal', 'amount', 'price', 'revenue', 'gross revenue', 'paid', 'amount paid', 'sale amount'],
+  refunded: ['refunded', 'refunded amount', 'refund', 'refund amount', 'refunds', 'total refunded'],
+  source: ['booking source', 'source', 'channel', 'sales channel', 'affiliate', 'origin', 'booked via', 'referral source', 'reseller', 'agent']
+};
+const PII_PATTERNS = ['customer', 'guest name', 'full name', 'first name', 'last name', 'contact name', 'contact', 'name', 'email', 'e-mail', 'phone', 'mobile', 'cell', 'telephone', 'address', 'street', 'city', 'postal', 'zip', 'dob', 'date of birth', 'birth', 'notes', 'note', 'comment', 'comments', 'special request', 'dietary', 'medical', 'health', 'allergy', 'allergies', 'waiver', 'emergency', 'card', 'credit card', 'payment method', 'last 4', 'ssn', 'passport'];
+const MONTHS = { jan:1, january:1, feb:2, february:2, mar:3, march:3, apr:4, april:4, may:5, jun:6, june:6, jul:7, july:7, aug:8, august:8, sep:9, sept:9, september:9, oct:10, october:10, nov:11, november:11, dec:12, december:12 };
+
+const SAMPLE_CSV = `Booking ID,Trip Date,Item,Guests,Status,Gross Amount,Refunded,Booking Source,Customer,Email,Phone
+1001,2025-06-14,Half-Day Naturalist Walk,3,Confirmed,$285.00,$0.00,Website,Guest 1001,guest1001@example.com,555-0101
+1002,07/04/2025,Full-Day Lakes Basin Hike,4,Confirmed,$660.00,$0.00,Viator,Guest 1002,guest1002@example.com,555-0102
+1003,08/19/2025,Private Custom Day,6,Confirmed,$710.00,$0.00,Website,Guest 1003,guest1003@example.com,555-0103
+1004,2025-09-12,Full-Day Lakes Basin Hike,2,Cancelled,$330.00,$165.00,Phone,Guest 1004,guest1004@example.com,555-0104
+1005,2025-12-18,Winter Snowshoe,4,Confirmed,$480.00,$0.00,Viator,Guest 1005,guest1005@example.com,555-0105
+1006,2026-06-15,Half-Day Naturalist Walk,4,Confirmed,$380.00,$0.00,Website,Guest 1006,guest1006@example.com,555-0106
+1006,06/15/2026,Half-Day Naturalist Walk,4,Confirmed,$380.00,$0.00,Website,Guest 1006,guest1006@example.com,555-0106
+1007,07/11/2026,Full-Day Lakes Basin Hike,5,Confirmed,$825.00,$0.00,Viator,Guest 1007,guest1007@example.com,555-0107
+1008,2026-08-22,Private Custom Day,9,Confirmed,$965.00,$0.00,Website,Guest 1008,guest1008@example.com,555-0108
+1009,09/05/2026,3-Day Backpacking Intro,2,Confirmed,"$1,380.00",$0.00,Website,Guest 1009,guest1009@example.com,555-0109
+1010,2026-10-03,Half-Day Naturalist Walk,2,Cancelled,$190.00,$190.00,Phone,Guest 1010,guest1010@example.com,555-0110
+1011,2026-12-19,Winter Snowshoe,3,Confirmed,$360.00,$0.00,Viator,Guest 1011,guest1011@example.com,555-0111
+1012,2026-07-01,Winter Snowshoe,1,Confirmed,$120.00,$0.00,Internal,Test Booking,test@example.com,555-0199`;
+
+function parseCsv(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  const s = String(text || '').replace(/^\uFEFF/, '');
+  const first = s.split(/\r?\n/, 1)[0] || '';
+  const delim = (first.match(/\t/g) || []).length > (first.match(/,/g) || []).length ? '\t' : ',';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (q) { if (c === '"' && s[i + 1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === delim) { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(v => String(v).trim() !== ''));
+}
+
+function toCsv(rows) {
+  return rows.map(r => r.map(v => {
+    const s = v == null ? '' : String(v);
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }).join(',')).join('\n') + '\n';
+}
+
+const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const money = n => (n < 0 ? '-' : '') + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pct = (a, b) => !a ? (b ? 'n/a' : '0.0%') : `${b >= a ? '+' : ''}${(((b - a) / a) * 100).toFixed(1)}%`;
+
+function validYmd(y, m, d) {
+  if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) return '';
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== m - 1 || dt.getUTCDate() !== d) return '';
+  return `${String(y).padStart(4,'0')}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+function normalizeDate(raw, slashOrder) {
+  const s = String(raw || '').trim();
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return { iso: validYmd(+m[1], +m[2], +m[3]), fmt: 'YYYY-MM-DD' };
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+  if (m) {
+    let y = +m[3]; if (y < 100) y += 2000;
+    const [mo, da] = slashOrder === 'DMY' ? [+m[2], +m[1]] : [+m[1], +m[2]];
+    return { iso: validYmd(y, mo, da), fmt: slashOrder === 'DMY' ? 'DD/MM/YYYY' : 'MM/DD/YYYY' };
+  }
+  m = s.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})/);
+  if (m && MONTHS[m[1].toLowerCase()]) return { iso: validYmd(+m[3], MONTHS[m[1].toLowerCase()], +m[2]), fmt: 'Mon D, YYYY' };
+  return { iso: '', fmt: 'unparsed' };
+}
+
+function parseNum(raw) {
+  const s = String(raw ?? '').trim();
+  if (!s) return 0;
+  const neg = /^\(.*\)$/.test(s) || s.startsWith('-');
+  const n = parseFloat(s.replace(/[^0-9.]/g, ''));
+  return Number.isFinite(n) ? (neg ? -r2(n) : r2(n)) : NaN;
+}
+
+function reconcile(csvText, opts = {}) {
+  const rows = parseCsv(csvText);
+  if (rows.length < 2) throw new Error('The CSV needs a header row and at least one booking row.');
+  const rawHeaders = rows[0], dataRows = rows.slice(1);
+  const norm = rawHeaders.map(h => String(h || '').trim().toLowerCase().replace(/\s+/g, ' '));
+  const roles = {}, used = new Set();
+  for (const [role, pats] of Object.entries(ROLE_PATTERNS)) {
+    let idx = -1;
+    for (const p of pats) { const f = norm.findIndex((h, i) => !used.has(i) && h === p); if (f >= 0) { idx = f; break; } }
+    if (idx < 0) for (const p of pats) { if (p.length < 4) continue; const f = norm.findIndex((h, i) => !used.has(i) && h.includes(p)); if (f >= 0) { idx = f; break; } }
+    roles[role] = idx; if (idx >= 0) used.add(idx);
+  }
+  const missing = ['bookingId', 'tripDate', 'gross'].filter(k => roles[k] < 0);
+  if (missing.length) throw new Error('Could not find required column(s): ' + missing.join(', ') + '. Found: ' + rawHeaders.join(', '));
+
+  const piiCols = [];
+  norm.forEach((h, i) => { if (!used.has(i) && PII_PATTERNS.some(p => h === p || h.includes(p))) piiCols.push({ index: i, header: rawHeaders[i] }); });
+
+  let firstOver = 0, secondOver = 0;
+  dataRows.forEach(r => {
+    const m = String(r[roles.tripDate] || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+    if (m) { if (+m[1] > 12) firstOver++; if (+m[2] > 12) secondOver++; }
+  });
+  const slashOrder = (firstOver > 0 && secondOver === 0) ? 'DMY' : 'MDY';
+
+  const formats = {}, unknownStatuses = new Set(), seen = new Map();
+  const dups = [], tests = [], errors = [], cleaned = [];
+
+  dataRows.forEach((r, idx) => {
+    const bid = String(r[roles.bookingId] ?? '').trim();
+    const d = normalizeDate(r[roles.tripDate], slashOrder);
+    formats[d.fmt] = (formats[d.fmt] || 0) + 1;
+    const rawStatus = roles.status >= 0 ? String(r[roles.status] ?? '').trim() : 'Confirmed';
+    const sl = rawStatus.toLowerCase();
+    const status = /^(confirmed|complete|completed|paid|booked|active|checked in)$/.test(sl) ? 'confirmed'
+      : /^(cancelled|canceled|refunded|void|voided)$/.test(sl) ? 'cancelled' : 'other';
+    if (status === 'other') unknownStatuses.add(rawStatus || '(blank)');
+
+    const gross = parseNum(r[roles.gross]);
+    const refunded = roles.refunded >= 0 ? parseNum(r[roles.refunded]) : 0;
+    const guests = roles.guests >= 0 ? (parseInt(String(r[roles.guests] || '0').replace(/[^0-9\-]/g, ''), 10) || 0) : 0;
+    const item = roles.item >= 0 ? (String(r[roles.item] ?? '').trim() || '(Unspecified)') : '(Unspecified)';
+    const source = roles.source >= 0 ? (String(r[roles.source] ?? '').trim() || '(Unspecified)') : '(Unspecified)';
+    if (!d.iso || !bid || Number.isNaN(gross) || Number.isNaN(refunded)) { errors.push(idx + 2); return; }
+
+    const rec = { bid, date: d.iso, year: +d.iso.slice(0, 4), item, guests, status, rawStatus, gross, refunded, net: r2(gross - refunded), source };
+    const sig = [bid, d.iso, item, guests, status, gross.toFixed(2), refunded.toFixed(2), source].join('|');
+    if (seen.has(sig)) { dups.push(bid); return; }
+    seen.set(sig, idx + 2);
+
+    const isTest = /\b(test|testing|internal|dummy)\b/i.test(item + ' ' + source + ' ' + bid) || piiCols.some(c => /\b(test|testing|internal|dummy)\b/i.test(String(r[c.index] || '')));
+    if (isTest) { tests.push(bid); return; }
+    cleaned.push(rec);
+  });
+
+  const allYears = [...new Set(cleaned.map(r => r.year))].sort((a, b) => a - b);
+  const currentYear = opts.thisYear || allYears[allYears.length - 1] || new Date().getFullYear();
+  const priorYear = opts.lastYear || (allYears.length >= 2 ? allYears[allYears.length - 2] : currentYear - 1);
+  const today = opts.today || new Date().toISOString().slice(0, 10);
+
+  const sumYear = yr => {
+    const sub = cleaned.filter(r => r.year === yr);
+    const confirmed = sub.filter(r => r.status === 'confirmed');
+    const cancelled = sub.filter(r => r.status === 'cancelled');
+    const byItem = {}, bySource = {};
+    sub.forEach(r => {
+      byItem[r.item] = byItem[r.item] || { bookings: 0, net: 0 };
+      byItem[r.item].bookings++; byItem[r.item].net = r2(byItem[r.item].net + r.net);
+      bySource[r.source] = bySource[r.source] || { bookings: 0, net: 0 };
+      bySource[r.source].bookings++; bySource[r.source].net = r2(bySource[r.source].net + r.net);
+    });
+    const bookings = new Set(sub.map(r => r.bid)).size;
+    return {
+      year: yr, bookings, confirmed: confirmed.length, cancelled: cancelled.length,
+      cancelRate: bookings ? r2((cancelled.length / bookings) * 100) : 0,
+      net: r2(sub.reduce((s, r) => s + r.net, 0)),
+      guestsConfirmed: confirmed.reduce((s, r) => s + r.guests, 0),
+      byItem, bySource
+    };
+  };
+
+  const y1 = sumYear(priorYear), y2 = sumYear(currentYear);
+  const future = cleaned.filter(r => r.year === currentYear && r.date > today);
+  const questions = [];
+  if (unknownStatuses.size) questions.push('Unrecognized status value(s): ' + [...unknownStatuses].join(', ') + '. Confirm how to count them.');
+  const refOver = cleaned.filter(r => r.refunded > r.gross).map(r => r.bid);
+  if (refOver.length) questions.push('Refund larger than gross on booking ID(s): ' + refOver.join(', ') + '.');
+  const idCounts = {}; cleaned.forEach(r => { idCounts[r.bid] = (idCounts[r.bid] || 0) + 1; });
+  const multi = Object.entries(idCounts).filter(([, c]) => c > 1).map(([id]) => id);
+  if (multi.length) questions.push('Booking ID(s) appear on multiple rows with different details: ' + multi.slice(0, 6).join(', ') + '. Confirm if these are line items.');
+
+  const checks = [
+    { name: `Row accounting (${dataRows.length} raw - ${dups.length} duplicates - ${tests.length} test${errors.length ? ` - ${errors.length} errors` : ''} = ${cleaned.length} used)`, ok: (dataRows.length - dups.length - tests.length - errors.length) === cleaned.length },
+    { name: `${priorYear} per-trip net sum == yearly net (${money(y1.net)})`, ok: r2(Object.values(y1.byItem).reduce((s, v) => s + v.net, 0)) === y1.net },
+    { name: `${currentYear} per-trip net sum == yearly net (${money(y2.net)})`, ok: r2(Object.values(y2.byItem).reduce((s, v) => s + v.net, 0)) === y2.net },
+    { name: `${currentYear} per-source net sum == yearly net (${money(y2.net)})`, ok: r2(Object.values(y2.bySource).reduce((s, v) => s + v.net, 0)) === y2.net }
+  ];
+
+  const sanitizedCsv = toCsv([
+    ['Booking ID', 'Trip Date', 'Item', 'Guests', 'Status', 'Gross Amount', 'Refunded', 'Net Revenue', 'Booking Source'],
+    ...cleaned.map(r => [r.bid, r.date, r.item, r.guests, r.status === 'confirmed' ? 'Confirmed' : r.status === 'cancelled' ? 'Cancelled' : r.rawStatus, r.gross.toFixed(2), r.refunded.toFixed(2), r.net.toFixed(2), r.source])
+  ]);
+
+  return { rawCount: dataRows.length, cleanedCount: cleaned.length, priorYear, currentYear, today, piiCols: piiCols.map(c => c.header), formats, dups, tests, errors, y1, y2, future: { count: future.length, net: r2(future.reduce((s, r) => s + r.net, 0)), guests: future.filter(r => r.status === 'confirmed').reduce((s, r) => s + r.guests, 0) }, questions, checks, sanitizedCsv };
+}
+
+const $ = id => document.getElementById(id);
+$('optToday').value = new Date().toISOString().slice(0, 10);
+let lastCsv = '', lastReport = null;
+
+function renderReport(r) {
+  lastReport = r;
+  $('errBox').hidden = true;
+  $('results').hidden = false;
+  $('rerunBtn').disabled = false;
+
+  $('piiBanner').textContent = r.piiCols.length
+    ? `Processed locally: stripped ${r.piiCols.length} PII column(s) (${r.piiCols.join(', ')}), removed ${r.dups.length} duplicate(s) and ${r.tests.length} test row(s). ${r.cleanedCount} clean bookings remain.`
+    : `Processed locally: no guest PII columns detected; removed ${r.dups.length} duplicate(s) and ${r.tests.length} test row(s). ${r.cleanedCount} clean bookings remain.`;
+
+  const kpis = [
+    ['Net Revenue (' + r.currentYear + ')', money(r.y2.net), `${pct(r.y1.net, r.y2.net)} vs ${money(r.y1.net)} (${r.priorYear})`],
+    ['Bookings (' + r.currentYear + ')', String(r.y2.bookings), `${pct(r.y1.bookings, r.y2.bookings)} vs ${r.y1.bookings} (${r.priorYear})`],
+    ['Confirmed Guests', String(r.y2.guestsConfirmed), `${pct(r.y1.guestsConfirmed, r.y2.guestsConfirmed)} vs ${r.y1.guestsConfirmed} (${r.priorYear})`],
+    ['Cancellation Rate', r.y2.cancelRate.toFixed(1) + '%', `${(r.y2.cancelRate - r.y1.cancelRate).toFixed(1)} pts vs ${r.y1.cancelRate.toFixed(1)}%`]
+  ];
+  $('kpiGrid').innerHTML = kpis.map(([l, v, d]) => `<div class="kpi"><div class="k-label">${l}</div><div class="k-val">${v}</div><div class="k-delta">${d}</div></div>`).join('');
+
+  if (r.future.count > 0) {
+    $('futureNotice').hidden = false;
+    $('futureNotice').textContent = `Heads up: ${r.future.count} booking(s) in ${r.currentYear} have trip dates after ${r.today} (${money(r.future.net)} net, ${r.future.guests} confirmed guests). Mention this first in any owner or board summary.`;
+  } else $('futureNotice').hidden = true;
+
+  if (r.questions.length) {
+    $('questionsBox').hidden = false;
+    $('questionsList').innerHTML = r.questions.map(q => `<li>${q}</li>`).join('');
+  } else $('questionsBox').hidden = true;
+
+  const renderBreakdown = (elId, key) => {
+    const names = [...new Set([...Object.keys(r.y1[key]), ...Object.keys(r.y2[key])])].sort((a, b) => (r.y2[key][b]?.net || 0) - (r.y2[key][a]?.net || 0));
+    $(elId).innerHTML = `<thead><tr><th>Name</th><th class="num">${r.priorYear}</th><th class="num">${r.currentYear}</th><th class="num">Change</th></tr></thead><tbody>` +
+      names.map(n => {
+        const a = r.y1[key][n] || { bookings: 0, net: 0 }, b = r.y2[key][n] || { bookings: 0, net: 0 };
+        return `<tr><td>${n}</td><td class="num">${money(a.net)} (${a.bookings})</td><td class="num">${money(b.net)} (${b.bookings})</td><td class="num">${pct(a.net, b.net)}</td></tr>`;
+      }).join('') + '</tbody>';
+  };
+  renderBreakdown('tripTable', 'byItem');
+  renderBreakdown('sourceTable', 'bySource');
+
+  $('removedList').innerHTML = `
+    <li>Exact &amp; hidden duplicates removed: <strong>${r.dups.length}</strong>${r.dups.length ? ' (IDs: ' + r.dups.join(', ') + ')' : ''}</li>
+    <li>Test / internal bookings removed: <strong>${r.tests.length}</strong>${r.tests.length ? ' (IDs: ' + r.tests.join(', ') + ')' : ''}</li>
+    <li>PII columns stripped from clean CSV: <strong>${r.piiCols.length ? r.piiCols.join(', ') : 'None found'}</strong></li>`;
+  $('formatMeta').textContent = 'Date formats standardized: ' + Object.entries(r.formats).map(([k, v]) => `${k} (${v})`).join(', ');
+  $('checksList').innerHTML = r.checks.map(c => `<li>${c.name}: <strong style="color:var(${c.ok ? '--accent' : '--warn'})">${c.ok ? 'OK' : 'FAILED'}</strong></li>`).join('');
+}
+
+function run(csvText) {
+  lastCsv = csvText;
+  try {
+    const report = reconcile(csvText, {
+      thisYear: parseInt($('optThisYear').value, 10) || undefined,
+      lastYear: parseInt($('optLastYear').value, 10) || undefined,
+      today: $('optToday').value || undefined
+    });
+    renderReport(report);
+  } catch (e) {
+    $('results').hidden = true;
+    $('errBox').hidden = false;
+    $('errBox').textContent = e.message;
+  }
+}
+
+const dz = $('dropzone');
+dz.addEventListener('click', () => $('csvFile').click());
+dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') $('csvFile').click(); });
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', async e => { e.preventDefault(); dz.classList.remove('dragover'); const f = e.dataTransfer.files[0]; if (f) run(await f.text()); });
+$('csvFile').addEventListener('change', async e => { const f = e.target.files[0]; if (f) run(await f.text()); e.target.value = ''; });
+$('runSample').addEventListener('click', () => { $('optThisYear').value = '2026'; $('optLastYear').value = '2025'; $('optToday').value = '2026-11-21'; run(SAMPLE_CSV); });
+$('rerunBtn').addEventListener('click', () => { if (lastCsv) run(lastCsv); });
+
+$('dlCleanCsv').addEventListener('click', () => {
+  if (!lastReport) return;
+  const blob = new Blob([lastReport.sanitizedCsv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sanitized-bookings-${lastReport.priorYear}-${lastReport.currentYear}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$('copyNarrativePrompt').addEventListener('click', async () => {
+  if (!lastReport) return;
+  const r = lastReport;
+  const prompt = [
+    `Write a one-page owner and board season summary comparing ${r.currentYear} vs ${r.priorYear} for a small outdoor guiding business.`,
+    'RULES: Use ONLY the verified numbers below. No finding without a number. Flag counts under 10 as small. Never state a cause as fact. List 5 findings (future bookings first if any), 3 decisions to consider tied to numbers, and what booking data alone cannot tell us.',
+    '',
+    `VERIFIED TOTALS (${r.cleanedCount} cleaned bookings; ${r.dups.length} duplicates and ${r.tests.length} test rows removed):`,
+    `${r.priorYear}: ${r.y1.bookings} bookings (${r.y1.confirmed} confirmed, ${r.y1.cancelled} cancelled, ${r.y1.cancelRate}% cancel rate), ${money(r.y1.net)} net, ${r.y1.guestsConfirmed} confirmed guests.`,
+    `${r.currentYear}: ${r.y2.bookings} bookings (${r.y2.confirmed} confirmed, ${r.y2.cancelled} cancelled, ${r.y2.cancelRate}% cancel rate), ${money(r.y2.net)} net, ${r.y2.guestsConfirmed} confirmed guests.`,
+    r.future.count ? `Future bookings in ${r.currentYear} after ${r.today}: ${r.future.count} bookings, ${money(r.future.net)} net, ${r.future.guests} guests.` : '',
+    'By trip: ' + JSON.stringify({ [r.priorYear]: r.y1.byItem, [r.currentYear]: r.y2.byItem }),
+    'By source: ' + JSON.stringify({ [r.priorYear]: r.y1.bySource, [r.currentYear]: r.y2.bySource })
+  ].filter(Boolean).join('\n');
+  await navigator.clipboard.writeText(prompt);
+  $('copyState').textContent = 'Copied! Paste into any free ChatGPT, Claude, or Gemini chat — no Code Interpreter required.';
+  setTimeout(() => { $('copyState').textContent = ''; }, 4500);
+});
+
+$('printReport').addEventListener('click', () => window.print());
+</script>
+</body>
+</html>

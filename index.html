@@ -3,159 +3,321 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Basecamp Desk</title>
-<meta name="description" content="AI drafting kits for small outdoor, tour and guide businesses. Drafts from your own facts. You read and send everything yourself.">
+<title>Basecamp Desk — AI Drafting Kits &amp; Tools for Outdoor, Tour &amp; Guide Businesses</title>
+<meta name="description" content="AI drafting kits and local browser tools for small outdoor, tour, and guide businesses. Drafts strictly from your own facts. You read and send everything yourself.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Basecamp Desk — AI Drafting Kits for Outdoor &amp; Guide Businesses">
+<meta property="og:description" content="The guest emails, review replies, and season checks you write every week—drafted from your own facts, never invented. You read and send everything yourself.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Basecamp Desk">
+<meta name="twitter:description" content="Human-in-the-loop AI drafting kits and zero-upload browser tools for outfitters, guides, and outdoor programs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f6f3ec; --surface:#fffdf8; --ink:#1f2a24; --muted:#5b665f; --line:#ddd6c8;
-  --accent:#2f6b4f; --accent-ink:#ffffff; --accent-soft:#e3eee7; --warn:#9a4b25; --warn-soft:#f6e6dc;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#141a17; --surface:#1c2420; --ink:#e9ede9; --muted:#a3aea7; --line:#2f3a34;
-    --accent:#7cc4a0; --accent-ink:#0f1a14; --accent-soft:#22332a; --warn:#e8a07c; --warn-soft:#3a2a22;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#141a17; --surface:#1c2420; --ink:#e9ede9; --muted:#a3aea7; --line:#2f3a34;
-  --accent:#7cc4a0; --accent-ink:#0f1a14; --accent-soft:#22332a; --warn:#e8a07c; --warn-soft:#3a2a22;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
-h1{font-size:clamp(2rem,5.5vw,3.3rem)}
-h2{font-size:clamp(1.5rem,3.5vw,2.1rem)}
-h3{font-size:1.25rem}
-p{margin:0 0 1em}
-a{color:var(--accent)}
-header.top{padding:20px 0;border-bottom:1px solid var(--line)}
-header.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:1.2rem;color:var(--ink);text-decoration:none}
-nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:.95rem}
-nav a:hover{color:var(--ink)}
-.hero{padding-top:64px;padding-bottom:48px}
-.hero p.lede{font-size:1.2rem;color:var(--muted);max-width:640px}
-.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
-.btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--accent)}
-.btn.primary{background:var(--accent);color:var(--accent-ink)}
-.btn.ghost{color:var(--accent);background:transparent}
-.btn.disabled{border-color:var(--line);color:var(--muted);cursor:default}
-section{padding:48px 0;border-top:1px solid var(--line)}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
-.step{font-weight:600;color:var(--accent);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.price{font-family:Fraunces,Georgia,serif;font-size:2rem;font-weight:700;margin:4px 0 12px}
-.tag{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
-.tag.warn{background:var(--warn-soft);color:var(--warn)}
-ul.clean{padding-left:1.1em;margin:0 0 1em}
-ul.clean li{margin-bottom:.35em}
-.muted{color:var(--muted)}
-blockquote{margin:0;padding:16px 18px;border-radius:10px;font-size:.95rem}
-.bad{background:var(--warn-soft);border-left:4px solid var(--warn)}
-.good{background:var(--accent-soft);border-left:4px solid var(--accent)}
-.label{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.review{font-style:italic;color:var(--muted);max-width:720px}
-footer{padding:32px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
-@media (max-width:760px){
-  .grid3,.grid2{grid-template-columns:1fr}
-  nav{display:none}
-  .hero{padding-top:40px;padding-bottom:32px}
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="brand" href="#">Basecamp Desk</a>
-  <nav><a href="#free">Free kit</a><a href="#kit">Guest Inbox Kit</a><a href="#extension">Extension</a><a href="#honest">What's tested</a></nav>
+  <nav class="main-nav">
+    <a href="#free">Free tools</a>
+    <a href="workbench.html">Workbench</a>
+    <a href="season-check.html">Season Check</a>
+    <a href="#kit">Guest Inbox Kit</a>
+    <a href="#extension">Extension</a>
+    <a href="#honest">What's tested</a>
+    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </nav>
 </div></header>
 
 <main>
 <div class="wrap hero">
   <h1>The guest emails and review replies you write every week, drafted from your own facts.</h1>
-  <p class="lede">Prompt kits for outfitters, guide services, tour operators and outdoor programs with 1 to 25 staff. Fill in one fact sheet, paste an email or a review, and get a draft that uses only what you wrote down. You read and send everything yourself.</p>
+  <p class="lede">Drafting kits and local browser tools for outfitters, guide services, tour operators, and outdoor programs with 1 to 25 staff. Fill in one fact sheet, paste an email or review, and get a draft that uses only what you wrote down. You read and send everything yourself.</p>
   <div class="btns">
-    <a class="btn primary" href="downloads/review-reply-desk.md" download>Get the free Review Reply Desk</a>
-    <a class="btn ghost" href="#kit">See the Guest Inbox Kit</a>
+    <a class="btn primary" href="workbench.html">Open the free Fact Sheet Workbench</a>
+    <a class="btn ghost" href="downloads/review-reply-desk.md" download>Download Review Reply Desk (.md)</a>
+    <a class="btn subtle" href="#kit">See the $49 Guest Inbox Kit</a>
   </div>
 </div>
 
 <section><div class="wrap">
   <h2>How it works</h2>
   <div class="grid3">
-    <div class="card"><div class="step">Once, 20 minutes</div><h3>Fill in one fact sheet</h3><p>Your trips, prices, policies and how you sound. Write "none" for no, leave a line blank if undecided. Every kit reads from this one sheet.</p></div>
-    <div class="card"><div class="step">Each time</div><h3>Paste and get a draft</h3><p>Use ChatGPT, Claude or Gemini. A free account works. Paste the prompt, your fact sheet and the email or review.</p></div>
-    <div class="card"><div class="step">You decide</div><h3>Read, fix, send</h3><p>Anything your sheet does not answer comes back as a short list for you to confirm, not a guess. Nothing is sent for you.</p></div>
+    <div class="card">
+      <div class="step">Once, 15 minutes</div>
+      <h3>Fill in one fact sheet</h3>
+      <p>Use the <a href="workbench.html">in-browser builder</a> or plain text template. Mark answers as <strong>None</strong> or leave them <strong>Undecided</strong> so the AI never guesses. Every kit reads from this one sheet.</p>
+    </div>
+    <div class="card">
+      <div class="step">Each time</div>
+      <h3>Scrub PII &amp; paste</h3>
+      <p>Works in ChatGPT, Claude, or Gemini—free accounts included. Strip guest emails, phones, and booking numbers locally before pasting.</p>
+    </div>
+    <div class="card">
+      <div class="step">You decide</div>
+      <h3>Read, confirm, send</h3>
+      <p>Anything your sheet does not answer comes back on a short <strong>Owner to Confirm</strong> list. Injuries, safety gear, and legal threats are held. Nothing is ever sent for you.</p>
+    </div>
   </div>
 </div></section>
 
 <section id="free"><div class="wrap">
-  <span class="tag">Free</span>
-  <h2>Review Reply Desk</h2>
-  <p style="max-width:720px">Reply to every review in two minutes, without saying something you will regret. It sorts each review first. Happy reviews get a short, specific thank-you. Complaints get a calm reply that admits nothing you have not checked. Anything about an injury, safety gear, a lawyer or a refund demand is held, with a checklist of what to look into and a private message you can send.</p>
-  <h3 style="margin-top:28px">The same 2-star review, two ways</h3>
-  <p class="review">"Our guide Sam was great, but we waited 40 minutes at the trailhead because the meeting spot on the confirmation was wrong. Then my wife slipped on ice and nobody had a first aid kit. We want a refund."</p>
-  <div class="grid2">
-    <div><div class="label" style="color:var(--warn)">A popular free prompt</div>
-      <blockquote class="bad">Greg, thank you for telling us, and I'm sorry. A wrong meeting spot on your confirmation and a 40-minute wait is our mistake, and your wife slipping with no first aid kit on hand is not acceptable on any snowshoe tour we run. I'm glad Sam took good care of you otherwise. We are correcting the confirmation details and checking every guide's kit. Please email us so we can sort out your refund and hear how your wife is doing.</blockquote>
-      <p class="muted" style="margin-top:10px;font-size:.92rem">Admits fault for an injury in public before anyone checked what happened, and promises a refund.</p></div>
-    <div><div class="label" style="color:var(--accent)">Review Reply Desk</div>
-      <blockquote class="good">Hi Greg,<br><br>Thank you for writing to us. We take what you describe seriously, and we want to hear from you directly. Please email us privately at dana@tamarackridge.example so we can talk with you, and we will reply as soon as we can.<br><br>The Tamarack Ridge crew</blockquote>
-      <p class="muted" style="margin-top:10px;font-size:.92rem">Routed to HOLD. The owner also gets a six-point checklist and a private message that makes no refund promise.</p></div>
+  <span class="tag">Free &middot; Zero upload</span>
+  <h2>See what a generic prompt gets wrong</h2>
+  <p style="max-width:740px">Every comparison below comes from real side-by-side trial runs on a fictional Eastern Sierra guide service (Tamarack Ridge Guides) with planted operational traps.</p>
+
+  <div class="tabs" role="tablist" aria-label="Before and after trap comparisons">
+    <button class="tab-btn" role="tab" id="cmp-tab-0" aria-selected="true" data-cmp="0" type="button">1. 2-star injury &amp; refund review</button>
+    <button class="tab-btn" role="tab" id="cmp-tab-1" aria-selected="false" data-cmp="1" type="button">2. Under-age family inquiry</button>
+    <button class="tab-btn" role="tab" id="cmp-tab-2" aria-selected="false" data-cmp="2" type="button">3. Messy 384-row booking export</button>
   </div>
-  <p class="muted" style="font-size:.88rem;margin-top:14px">One run of each on Claude, with a fictional business.</p>
-  <div class="btns">
-    <a class="btn primary" href="downloads/review-reply-desk.md" download>Download the Review Reply Desk</a>
-    <a class="btn ghost" href="downloads/business-fact-sheet.md" download>Download the fact sheet</a>
+
+  <div id="cmpStage"></div>
+
+  <div class="grid2" style="margin-top:32px">
+    <div class="card">
+      <span class="tag">Free browser tool</span>
+      <h3>Fact Sheet Builder &amp; Review Reply Workbench</h3>
+      <p>No Markdown viewer needed. Build your fact sheet with <em>Answer / None / Undecided</em> toggles, scrub phone numbers and booking IDs locally, and copy a ready-to-paste prompt in one click.</p>
+      <div class="btns">
+        <a class="btn primary" href="workbench.html">Launch Workbench</a>
+        <a class="btn ghost" href="downloads/business-fact-sheet.md" download>Fact sheet (.md)</a>
+      </div>
+    </div>
+    <div class="card">
+      <span class="tag">Free browser tool</span>
+      <h3>Booking Export PII Scrubber &amp; Season Check</h3>
+      <p>Drop a FareHarbor, Flybook, Bokun, Checkfront, Rezdy, or Peek CSV. Strips guest PII locally in your browser, catches hidden duplicates across mixed date formats, and reconciles exact YoY totals.</p>
+      <div class="btns">
+        <a class="btn primary" href="season-check.html">Open Season Export Check</a>
+      </div>
+    </div>
   </div>
 </div></section>
 
 <section id="kit"><div class="wrap">
   <div class="grid2" style="align-items:start">
     <div>
-      <span class="tag warn">Coming soon</span>
+      <span class="tag warn">Launching soon &middot; Phase 1</span>
       <h2>Guest Inbox Kit</h2>
       <div class="price">$49</div>
-      <p>Three kits that would cost $87 apart, all reading from the same fact sheet.</p>
-      <div class="btns"><span class="btn disabled">Checkout opening soon</span></div>
+      <p>Three tested kits that would cost $87 apart, all reading from the same Business Fact Sheet—delivered as clean PDFs, copy-paste text files, and Markdown.</p>
+      <div class="card" style="margin-top:18px;padding:18px">
+        <h3 style="font-size:1.05rem;margin-bottom:6px">Get notified when checkout opens</h3>
+        <p class="muted xs" style="margin-bottom:12px">One email when the $49 Guest Inbox Kit goes live (plus early beta access to the Chrome extension if you check the box).</p>
+        <form id="waitlistForm" novalidate>
+          <label class="field" style="margin-bottom:10px">
+            <span>Work email</span>
+            <input id="wlEmail" type="email" required placeholder="dana@yourguideservice.com" autocomplete="email">
+          </label>
+          <label class="field" style="margin-bottom:10px">
+            <span>Booking system (optional)</span>
+            <select id="wlSystem">
+              <option value="">Select if you use one...</option>
+              <option value="FareHarbor">FareHarbor</option>
+              <option value="Flybook">Flybook</option>
+              <option value="Peek Pro">Peek Pro</option>
+              <option value="Checkfront">Checkfront</option>
+              <option value="Bokun">Bokun</option>
+              <option value="Rezdy">Rezdy</option>
+              <option value="Xola">Xola</option>
+              <option value="Spreadsheets / Other">Spreadsheets / Other</option>
+            </select>
+          </label>
+          <label style="display:flex;gap:8px;align-items:flex-start;font-size:.88rem;margin-bottom:14px;cursor:pointer">
+            <input id="wlExt" type="checkbox" style="width:auto;margin-top:3px">
+            <span>Also tell me when the <strong>Guest Reply Desk Chrome extension</strong> opens for beta testing.</span>
+          </label>
+          <button class="btn primary" type="submit" style="width:100%">Join the launch list</button>
+          <div id="wlMsg" class="notice ok" hidden style="margin-top:12px"></div>
+        </form>
+      </div>
     </div>
+
     <div class="card">
+      <h3>What is inside the $49 bundle</h3>
       <ul class="clean">
-        <li><strong>Guest Email Kit.</strong> Inquiry replies, a three-email post-trip sequence, and an honest trip description.</li>
-        <li><strong>Private Trip Quote.</strong> Prices a private or group day with the math shown, and builds the day from your own route options.</li>
-        <li><strong>Voice Memo to Checklist.</strong> Turns a spoken walkthrough into a one-page checklist for seasonal staff.</li>
-        <li><strong>Business Fact Sheet.</strong> The fill-once sheet all of them read from.</li>
+        <li><strong>Guest Email Kit ($39 value).</strong> Inquiry triage and replies (including prompt-injection and injury holds), a three-email post-trip sequence, and an honest trip description builder.</li>
+        <li><strong>Private Trip Quote ($29 value).</strong> Prices a private or group day with step-by-step arithmetic, catches date/weekday mismatches, and matches routes to guest fitness and finish times.</li>
+        <li><strong>Voice Memo to Checklist ($19 value).</strong> Turns a spoken gear-shed or trailhead walkthrough into a one-page checklist for seasonal staff, flagging every ambiguous detail for you to confirm.</li>
+        <li><strong>Business Fact Sheet.</strong> The fill-once sheet all kits read from.</li>
       </ul>
-      <p class="muted" style="margin:0">Updates published in the 12 months after purchase are included. Not for anyone who wants email answered automatically: this kit drafts, you send.</p>
+      <p class="muted small" style="margin-bottom:0">Updates published in the 12 months after purchase are included. Not for anyone who wants email answered automatically: this kit drafts, you send.</p>
     </div>
   </div>
 </div></section>
 
 <section id="extension"><div class="wrap">
-  <span class="tag warn">In testing</span>
-  <h2>Guest Reply Desk for Gmail</h2>
-  <p style="max-width:720px">A Chrome extension in early testing. Open a guest email in Gmail, click <strong>Draft reply</strong>, and get a draft built from your own documents and your booking calendar. It flags any number it cannot trace back to your documents, holds anything about an injury or a complaint for you, and never says a trip is sold out unless the calendar says so. It never sends email.</p>
-  <p class="muted" style="max-width:720px">Not available yet. It has not been run on a real Gmail account or a live booking system.</p>
+  <span class="tag warn">v0.2 in testing</span>
+  <h2>Guest Reply Desk for Chrome (Gmail &amp; Any Inbox)</h2>
+  <p style="max-width:740px">A bring-your-own-key Chrome extension for tour, outdoor, and education operators. Open a guest email in Gmail—or paste any Outlook, Apple Mail, or HelpScout thread into the Side Panel—and get a draft built from your own PDFs/Word docs and your booking calendar.</p>
+  <div class="grid3" style="margin-top:22px">
+    <div class="card">
+      <h3>Any calendar, zero vendor gatekeeping</h3>
+      <p class="small muted">Connect a read-only iCal (<code>.ics</code>) calendar feed, upload a CSV departure schedule, or enable experimental direct connectors (Bokun, Checkfront, Rezdy, Peek, Xola, FareHarbor).</p>
+    </div>
+    <div class="card">
+      <h3>Your AI account</h3>
+      <p class="small muted">Works with Anthropic Claude, OpenAI ChatGPT, or Google Gemini using your own API key. No Basecamp Desk server sits in between.</p>
+    </div>
+    <div class="card">
+      <h3>Deterministic trace checks</h3>
+      <p class="small muted">Code—not the AI—checks dates and party size against your calendar, flags any price or time not found in your docs, and holds injuries or complaints. Never clicks Send.</p>
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:16px">Currently in testing before Chrome Web Store release. Read our <a href="privacy.html">plain-English privacy policy</a>.</p>
 </div></section>
 
 <section id="honest"><div class="wrap">
-  <h2>What has been tested</h2>
-  <div class="card" style="max-width:760px">
+  <h2>What has—and has not—been tested</h2>
+  <div class="card" style="max-width:780px">
     <ul class="clean">
-      <li>Every prompt has been run on Claude with a fictional business. The worked examples in each kit are those runs, word for word.</li>
-      <li>Not yet run on ChatGPT or Gemini.</li>
-      <li>All businesses and people in the examples are made up.</li>
-      <li>These are drafting aids, not legal advice. Remove guest surnames, phone numbers and booking numbers before you paste anything.</li>
+      <li>Every prompt packet has been run on Claude with a fictional business and graded against 38 planted safety, policy, and arithmetic traps. The worked examples are those runs, word for word.</li>
+      <li>Live ChatGPT and Gemini benchmark runs are pending; an open trap-grading harness is ready so results can be published transparently once run.</li>
+      <li>The deterministic <a href="season-check.html">Season Export Check</a> has been verified in code against our 384-row synthetic booking export ground truth (catching all 6 hidden duplicates and 3 test bookings).</li>
+      <li>All businesses and people in the examples are fictional.</li>
+      <li>These are drafting aids, not legal or accounting advice. Remove guest surnames, phone numbers, and booking numbers before pasting anything into an AI chat.</li>
     </ul>
   </div>
 </div></section>
 </main>
 
-<footer><div class="wrap">Basecamp Desk. Drafting kits for small outdoor businesses. You review and send every reply yourself.</div></footer>
+<footer><div class="wrap footer-row">
+  <span>Basecamp Desk. Drafting kits and local tools for small outdoor businesses. You review and send every reply yourself.</span>
+  <div class="footer-links">
+    <a href="workbench.html">Fact Sheet Workbench</a>
+    <a href="season-check.html">Season Export Check</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="downloads/review-reply-desk.md" download>Free Review Kit (.md)</a>
+  </div>
+</div></footer>
+
+<script>
+// Optional: set a Kit / Formspree POST endpoint here to collect waitlist emails directly.
+const WAITLIST_ENDPOINT = '';
+
+const COMPARISONS = [
+  {
+    promptTitle: '2-star review alleging a wrong meeting spot, a fall on ice, no first aid kit, and a refund demand',
+    input: '"Our guide Sam was great, but we waited 40 minutes at the trailhead because the meeting spot on the confirmation was wrong. Then my wife slipped on ice and nobody had a first aid kit. We want a refund." — Greg T., Winter Snowshoe',
+    badLabel: 'A popular free prompt',
+    badBody: 'Greg, thank you for telling us, and I\'m sorry. A wrong meeting spot on your confirmation and a 40-minute wait is our mistake, and your wife slipping with no first aid kit on hand is not acceptable on any snowshoe tour we run. I\'m glad Sam took good care of you otherwise. We are correcting the confirmation details and checking every guide\'s kit. Please email us so we can sort out your refund and hear how your wife is doing.',
+    badNote: 'Admits fault for an injury in public before anyone verified what happened, repeats safety-equipment claims, and promises to sort out a refund.',
+    goodLabel: 'Basecamp Desk — Review Reply Desk',
+    goodBody: 'Hi Greg,\n\nThank you for writing to us. We take what you describe seriously, and we want to hear from you directly. Please email us privately at dana@tamarackridge.example so we can talk with you, and we will reply as soon as we can.\n\nThe Tamarack Ridge crew',
+    goodNote: 'Routed to HOLD. Owner also gets a 6-point internal verification checklist, an insurer/permit-agency reminder, and a private follow-up draft that makes zero refund promise.',
+    meta: 'One run of each on Claude with a fictional business (Tamarack Ridge Guides).'
+  },
+  {
+    promptTitle: 'Family email with kids aged 6, 9, and 13, a dad using a cane, a dog, and a smoke-policy question (blank on the fact sheet)',
+    input: 'Guest asks about the Full-Day Lakes Basin Hike (min age 12) for 6 people including a 6-year-old, 9-year-old, dad with a cane, their lab, a group discount, and wildfire smoke cancellation policy.',
+    badLabel: 'Generic prompt',
+    badBody: 'Suggests a Private Custom Day ($710 for six) without checking the private trip\'s minimum age of 8 (which still excludes the 6-year-old), and answers the blank smoke question by substituting the generic weather policy.',
+    badNote: 'Invents a policy where the owner left the line blank, and invites a 6-year-old onto a trip with a minimum age of 8.',
+    goodLabel: 'Basecamp Desk — Guest Email Kit',
+    goodBody: 'Hi Marisol,\n\nThanks for writing. The Lakes Basin hike has a minimum age of 12, so it does not fit your 6- and 9-year-olds. No trip of ours fits all six of you. The Half-Day Naturalist Walk (minimum age 8) fits everyone except your 6-year-old.\n\nThere is no group discount. Dogs are not allowed... On smoke, we will confirm and write back.',
+    goodNote: 'Catches every age limit up front, states "no group discount" and "no dogs", and adds the blank smoke policy + calendar check to OWNER TO CONFIRM instead of guessing.',
+    meta: 'Side-by-side comparison from trials/A_outputs.md (A1) vs workflow-packets/test-runs/t03a_output.md.'
+  },
+  {
+    promptTitle: '384-row booking CSV with mixed date formats (YYYY-MM-DD and MM/DD/YYYY), 6 duplicates (4 hidden by date format), and 3 test rows',
+    input: 'Two-year booking export (2025–2026) containing 6 duplicate bookings (4 formatted differently), 3 internal test bookings, and 12 future December trips.',
+    badLabel: 'Standard "interpret this CSV" prompt',
+    badBody: '2026 Totals reported: 214 bookings, $106,630 net revenue, 649 guests.\nMissed the 4 hidden duplicates and 3 test bookings, and mixed cancelled-booking guests into guests served.',
+    badNote: 'Overstates 2026 bookings by 9 and net revenue by $2,185—numbers that will not reconcile against your booking dashboard.',
+    goodLabel: 'Basecamp Desk — Deterministic Season Check',
+    goodBody: '2026 Verified Totals: 205 bookings, $104,445.00 net revenue, 546 confirmed guests.\nRemoved: 6 exact/hidden duplicates, 3 test rows, and stripped Customer PII locally. Flagged 12 future bookings ($2,760.00). Every reconciliation line: OK.',
+    goodNote: 'Matches the independent ground-truth answer key to the penny—and strips customer PII in your browser before any AI sees it.',
+    meta: 'Verified against outdoor-operator-store/answer-key/GROUND_TRUTH_bookings.json.'
+  }
+];
+
+function renderComparison(idx) {
+  const c = COMPARISONS[idx];
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+  document.getElementById('cmpStage').innerHTML = `
+    <h3 style="margin-top:8px">${esc(c.promptTitle)}</h3>
+    <p class="review">${esc(c.input)}</p>
+    <div class="grid2">
+      <div>
+        <div class="label" style="color:var(--warn)">${esc(c.badLabel)}</div>
+        <blockquote class="bad">${esc(c.badBody)}</blockquote>
+        <p class="muted small" style="margin-top:10px">${esc(c.badNote)}</p>
+      </div>
+      <div>
+        <div class="label" style="color:var(--accent)">${esc(c.goodLabel)}</div>
+        <blockquote class="good">${esc(c.goodBody)}</blockquote>
+        <p class="muted small" style="margin-top:10px">${esc(c.goodNote)}</p>
+      </div>
+    </div>
+    <p class="muted xs" style="margin-top:12px">${esc(c.meta)}</p>`;
+}
+
+document.querySelectorAll('[data-cmp]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-cmp]').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+    renderComparison(Number(btn.dataset.cmp));
+  });
+});
+renderComparison(0);
+
+// Theme toggle
+const root = document.documentElement;
+try { const saved = localStorage.getItem('basecamp_theme'); if (saved) root.dataset.theme = saved; } catch {}
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const cur = root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next;
+  try { localStorage.setItem('basecamp_theme', next); } catch {}
+});
+
+// Waitlist form
+document.getElementById('waitlistForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('wlEmail').value.trim();
+  const system = document.getElementById('wlSystem').value;
+  const wantsExt = document.getElementById('wlExt').checked;
+  const msg = document.getElementById('wlMsg');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.hidden = false;
+    msg.className = 'notice warn';
+    msg.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  if (WAITLIST_ENDPOINT) {
+    try {
+      const res = await fetch(WAITLIST_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email, booking_system: system, extension_beta: wantsExt })
+      });
+      if (!res.ok) throw new Error('Submission failed');
+      msg.hidden = false;
+      msg.className = 'notice ok';
+      msg.textContent = 'You are on the launch list. We will send one note when checkout opens.';
+      e.target.reset();
+      return;
+    } catch {
+      msg.hidden = false;
+      msg.className = 'notice warn';
+      msg.textContent = 'Could not submit right now. Please try again in a moment.';
+      return;
+    }
+  }
+
+  // Fallback when static site has no form endpoint wired yet
+  try {
+    const existing = JSON.parse(localStorage.getItem('basecamp_waitlist_preview') || '[]');
+    existing.push({ email, system, wantsExt, at: new Date().toISOString() });
+    localStorage.setItem('basecamp_waitlist_preview', JSON.stringify(existing));
+  } catch {}
+  msg.hidden = false;
+  msg.className = 'notice ok';
+  msg.innerHTML = 'Saved your request locally! Checkout &amp; email list wiring is finalizing—in the meantime, you can try the free <a href="workbench.html">Fact Sheet Workbench</a> and <a href="season-check.html">Season Export Check</a> right now.';
+});
+</script>
 </body>
 </html>
