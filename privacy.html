@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Basecamp Desk &amp; Guest Reply Desk</title>
+<meta name="description" content="Plain-English privacy policy for Basecamp Desk web tools and the Guest Reply Desk Chrome extension. No tracking, no server storage of your guest emails or documents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Basecamp Desk</a>
+  <nav class="main-nav">
+    <a href="index.html#free">Free kit</a>
+    <a href="workbench.html">Fact Sheet Workbench</a>
+    <a href="season-check.html">Season Export Check</a>
+    <a href="index.html#kit">Guest Inbox Kit</a>
+    <a href="privacy.html" aria-current="page">Privacy</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="wrap hero" style="padding-bottom:24px">
+  <span class="tag">Plain English</span>
+  <h1>Privacy Policy</h1>
+  <p class="lede">Basecamp Desk web tools and the Guest Reply Desk Chrome extension are built to run locally in your browser without a Basecamp Desk backend server.</p>
+  <p class="muted small">Last updated: November 23, 2026</p>
+</div>
+
+<section><div class="wrap" style="max-width:780px;margin:0">
+  <h2>1. Basecamp Desk Website &amp; Browser Tools</h2>
+  <p>The <a href="workbench.html">Fact Sheet Workbench</a> and <a href="season-check.html">Booking Export Season Check</a> run entirely inside your browser using JavaScript.</p>
+  <ul class="clean">
+    <li><strong>Your CSV files, reviews, and fact sheets never upload to Basecamp Desk.</strong> All PII scrubbing, deduplication, and prompt assembly happen on your own device.</li>
+    <li><strong>Local persistence:</strong> The Fact Sheet Workbench saves your draft fact sheet in your browser's <code>localStorage</code> so you do not have to retype it. You can clear it in one click at any time.</li>
+    <li><strong>No analytics trackers or ad pixels:</strong> This site loads only fonts from Google Fonts and uses no third-party tracking scripts.</li>
+    <li><strong>Waitlist / email signup:</strong> If you voluntarily submit your email address to be notified when the Guest Inbox Kit or extension opens, your email is used solely to send that product update and unsubscribe link.</li>
+  </ul>
+
+  <h2 style="margin-top:32px">2. Guest Reply Desk Chrome Extension</h2>
+  <p>Guest Reply Desk is a bring-your-own-key browser extension that drafts replies for your review and never sends email automatically.</p>
+  <ul class="clean">
+    <li><strong>What stays in your Chrome profile:</strong> Your AI API key, business facts, uploaded documents (PDF/Word/text), and imported schedule files are stored locally in <code>chrome.storage.local</code> with <code>TRUSTED_CONTEXTS</code> access restricted away from web pages. Nothing is synced via Chrome Sync or sent to Basecamp Desk.</li>
+    <li><strong>What goes to your chosen AI provider:</strong> Only when you click <strong>Draft reply</strong>, the open email text (or text you paste in the side panel), your business facts, your uploaded documents, and structured calendar verdicts are sent directly from your browser to the AI provider you selected (Anthropic, OpenAI, or Google Gemini) under your own API account and their commercial API terms.</li>
+    <li><strong>What goes to your booking system:</strong> If you enable a read-only calendar feed or booking connector, requests go directly from your browser to the host you explicitly approve. All connectors are read-only and never create, edit, or cancel bookings.</li>
+    <li><strong>No email retention:</strong> Guest emails and generated drafts are held only in memory while the panel is open and are not saved to disk by the extension.</li>
+    <li><strong>Guest health &amp; minor data:</strong> Guest inquiries sometimes include children's ages or health details. Before using any AI provider under school, camp, or agency contracts, verify that your contract allows sending inquiry text to that provider's API.</li>
+    <li><strong>Deleting your data:</strong> Click <em>Remove all keys, documents and settings</em> in extension Settings, or uninstall the extension, to erase all locally stored data immediately.</li>
+  </ul>
+
+  <h2 style="margin-top:32px">3. Contact</h2>
+  <p>Questions about privacy or data handling? Open an issue or reach out via the <a href="https://github.com/goehringcory-lang/Workflow">Basecamp Desk GitHub repository</a>.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-row">
+  <span>Basecamp Desk. Drafting tools for small outdoor businesses. You review and send every reply yourself.</span>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="workbench.html">Workbench</a>
+    <a href="season-check.html">Season Check</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</div></footer>
+</body>
+</html>
